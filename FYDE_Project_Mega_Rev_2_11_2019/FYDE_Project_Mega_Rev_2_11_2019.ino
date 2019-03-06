@@ -45,13 +45,13 @@ int     Pin_Number  = 255;
 int     Pin_Integer = 0;
 float   Pin_Float   = 0.0;
 
-char    ssid[32]        = "iPhoneXR"; 
-char    pass[32]        = "bullybully";
+char    ssid[32]        = "MYiPhone"; 
+char    pass[32]        = "wifiiscool";
 
 //char    ssid[32]        = "EE-IOT-Platform-02"; 
 //char    pass[32]        = "dUQQE?&W44x7";
 
-char    auth[256]  = "3249371193124d6ba26f0abe3f65ed2de";   // For FYDE projects only
+char    auth[256]  = "285c8101217c4c19a943100ee2b454cc";   // For FYDE projects only
 
 
 // **********************************
@@ -190,6 +190,30 @@ void ReadSensors(void) {
   }
 }
 
+void dimmer(int rep) {
+  int duty, period, onTime, offTime, change;
+  period = 1000/50;
+  duty = 0;
+  change = 10;
+  for(int i = 0;i < rep; i++) {
+    if(duty == 110) {
+      change = -10;
+      duty = 90;
+    }
+    else if(duty == -10) {
+      change = 10;
+      duty = 10;
+    }
+    onTime = period * duty /100;
+    offTime = period - onTime;
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(onTime);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(offTime);
+    duty+=change;
+  }
+}
+
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
@@ -204,6 +228,7 @@ void setup() {
   pinMode(RDY, INPUT_PULLUP);     // RDY Signal from 8266 (default is HIGH)
   pinMode(ACK, OUTPUT);           // ACK Signal to 8266
   pinMode(ESP_RST, OUTPUT);
+  //pinMode(debug1, OUTPUT);
   digitalWrite(ACK, LOW);         // Negate RDY signal to 8266
   
   digitalWrite(ESP_RST, LOW);     // Assert reset to ESP8266
@@ -237,9 +262,8 @@ void setup() {
 // ----------------------------------------------------------------------------
 
 void loop() {
-  
   ESP8266_to_Mega();
-  delay(400);
+  dimmer(20);
   ReadSensors();
-  delay(300);  
+  dimmer(15); 
 }
