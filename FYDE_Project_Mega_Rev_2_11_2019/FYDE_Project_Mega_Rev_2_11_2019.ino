@@ -114,7 +114,7 @@ void Wifi_Setup(void) {
 void ESP8266_to_Mega(void) {
 
   while (Serial1.available() > 0) {
-    //Serial.println("In serial input");
+    Serial.println("In serial input");
     // look for the next valid integer in the incoming serial stream:
 
     Pin_Number  = Serial1.parseInt();
@@ -141,24 +141,24 @@ float   sensorValueNew  = 0.0;
 // ===================   PARSER   ==================================================
 
 void Parser(void) {
-  //Serial.println("In the parser");
+  Serial.println("In the parser");
   
   if((Pin_Number == 1) && (Pin_Integer == 1))  {
     
-    DebugPrint();
+    //DebugPrint();
     digitalWrite(led, HIGH);
         
   }
   
   if((Pin_Number == 1) && (Pin_Integer == 0))  {
-    DebugPrint();
+    //DebugPrint();
     digitalWrite(led, LOW);
   }
 
   if (Pin_Number == 5) { 
     sensorValueOld = Pin_Float; 
     
-    DebugPrint();    
+    //DebugPrint();    
   }
  
 }
@@ -169,19 +169,19 @@ void ReadSensors(void) {
   sensorValueNew = analogRead(sensorPin);
   
   if (abs(sensorValueNew - (sensorValueOld)) > 0) {
-    Serial1.print(51);
-    Serial1.print(",");
-    Serial1.print(0);
-    Serial1.print(",");
-    Serial1.print((sensorValueNew/1023)*5);
-    Serial1.print("\n");
+    //Serial1.print(51);
+    //Serial1.print(",");
+    //Serial1.print(0);
+    //Serial1.print(",");
+    //Serial1.print((sensorValueNew/1023)*5);
+    //Serial1.print("\n");
     
-    Serial.print(51);
-    Serial.print(",");
-    Serial.print(0);
-    Serial.print(",");
-    Serial.print((sensorValueNew/1023)*5);
-    Serial.print("\n");
+    //Serial.print(51);
+    //Serial.print(",");
+    //Serial.print(0);
+    //Serial.print(",");
+    //Serial.print((sensorValueNew/1023)*5);
+    //Serial.print("\n");
     sensorValueOld = sensorValueNew;
   
     //Serial.print("Analog pin value = ");
@@ -228,6 +228,8 @@ void setup() {
   pinMode(RDY, INPUT_PULLUP);     // RDY Signal from 8266 (default is HIGH)
   pinMode(ACK, OUTPUT);           // ACK Signal to 8266
   pinMode(ESP_RST, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
   //pinMode(debug1, OUTPUT);
   digitalWrite(ACK, LOW);         // Negate RDY signal to 8266
   
@@ -262,8 +264,12 @@ void setup() {
 // ----------------------------------------------------------------------------
 
 void loop() {
+  digitalWrite(5, HIGH);
   ESP8266_to_Mega();
+  digitalWrite(5, LOW);
   dimmer(20);
+  digitalWrite(6, HIGH);
   ReadSensors();
+  digitalWrite(6, LOW);
   dimmer(15); 
 }
